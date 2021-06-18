@@ -1,0 +1,7 @@
+[package]
+name = "iterate"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+iterate = "1.0.0"
