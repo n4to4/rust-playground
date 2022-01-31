@@ -13,9 +13,9 @@ fn main() {
 
     // https://doc.rust-lang.org/std/mem/union.MaybeUninit.html#initializing-a-struct-field-by-field
     let role = unsafe {
-        addr_of_mut!((*ptr).name).write("maybe-uninit");
-        addr_of_mut!((*ptr).disabled).write(false);
-        addr_of_mut!((*ptr).flag).write(1);
+        addr_of_mut!((*ptr).name).write_unaligned("maybe-uninit");
+        addr_of_mut!((*ptr).disabled).write_unaligned(false);
+        addr_of_mut!((*ptr).flag).write_unaligned(1);
 
         role.assume_init()
     };
