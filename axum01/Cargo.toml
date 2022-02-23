@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 axum = "0.4.6"
-axum-extra = "0.1.4"
+axum-extra = { version = "0.1.4", features = ["typed-routing"] }
 serde = { version = "1.0.136", features = ["derive"] }
 tokio = { version = "1.17.0", features = ["full"] }
 tracing = "0.1.31"

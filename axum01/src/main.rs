@@ -4,6 +4,7 @@ use axum::{
     routing::{get, post},
     Json, Router,
 };
+use axum_extra::routing::{RouterExt, TypedPath};
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 
@@ -17,7 +18,9 @@ async fn main() {
         // `GET /` goes to `root`
         .route("/", get(root))
         // `POST /users` goes to `create_user`
-        .route("/users", post(create_user));
+        .route("/users", post(create_user))
+        .typed_get(users_show)
+        .typed_post(users_create);
 
     // run our app with hyper
     // `axum::Server` is a re-export of `hyper::Server`
@@ -61,4 +64,31 @@ struct CreateUser {
 struct User {
     id: u64,
     username: String,
+}
+
+#[derive(TypedPath, Deserialize)]
+#[typed_path("/users2/:id")]
+struct UsersShow {
+    id: u32,
+}
+
+async fn users_show(UsersShow { id }: UsersShow) -> impl IntoResponse {
+    format!("Showing user with id {id}")
+}
+
+#[derive(TypedPath)]
+#[typed_path("/users2")]
+struct UsersCollection;
+
+#[derive(Debug, Deserialize)]
+struct UsersCreatePayload {
+    id: u64,
+    username: String,
+}
+
+async fn users_create(
+    _: UsersCollection,
+    Json(payload): Json<UsersCreatePayload>,
+) -> impl IntoResponse {
+    format!("{payload:?}")
 }
