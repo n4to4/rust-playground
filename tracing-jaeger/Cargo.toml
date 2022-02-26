@@ -1,0 +1,13 @@
+[package]
+name = "tracing-jaeger"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+opentelemetry = "0.17.0"
+opentelemetry-jaeger = "0.16.0"
+tracing = "0.1.31"
+tracing-opentelemetry = "0.17.2"
+tracing-subscriber = { version = "0.3.9", features = ["std", "env-filter"] }
