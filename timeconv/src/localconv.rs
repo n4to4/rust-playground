@@ -34,6 +34,10 @@ pub fn str2unix(t: &str) -> Result<i64, chrono::ParseError> {
 mod tests {
     use super::*;
 
+    //
+    // DateTime to X
+    //
+
     #[test]
     fn test_time2unix() {
         let t = Local.ymd(2022, 4, 1).and_hms(9, 0, 0);
@@ -45,6 +49,10 @@ mod tests {
         let t = Local.ymd(2022, 4, 1).and_hms(9, 0, 0);
         assert_eq!("2022-04-01T09:00:00+09:00", &time2str(t));
     }
+
+    //
+    // Unixtime to X
+    //
 
     #[test]
     fn test_unix2time() {
@@ -58,6 +66,10 @@ mod tests {
         let t = 1648771200;
         assert_eq!("2022-04-01T09:00:00+09:00", &unix2str(t));
     }
+
+    //
+    // String to X
+    //
 
     #[test]
     fn test_str2time() {
