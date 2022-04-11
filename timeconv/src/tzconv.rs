@@ -3,11 +3,12 @@ pub mod utc {
 
     pub fn unix2time(t: i64) -> DateTime<Utc> {
         Utc.timestamp(t, 0)
+
+        //Utc.from_utc_datetime(&NaiveDateTime::from_timestamp(t, 0))
     }
 
     pub fn str2time(t: &str) -> Result<DateTime<Utc>, chrono::ParseError> {
-        let t = DateTime::parse_from_rfc3339(t)?.timestamp();
-        Ok(Utc.timestamp(t, 0))
+        Ok(DateTime::parse_from_rfc3339(t)?.with_timezone(&Utc))
     }
 }
 
@@ -19,8 +20,7 @@ pub mod local {
     }
 
     pub fn str2time(t: &str) -> Result<DateTime<Local>, chrono::ParseError> {
-        let t = DateTime::parse_from_rfc3339(t)?.timestamp();
-        Ok(Local.timestamp(t, 0))
+        Ok(DateTime::parse_from_rfc3339(t)?.with_timezone(&Local))
     }
 }
 
@@ -48,8 +48,7 @@ pub mod newyork2 {
     }
 
     pub fn str2time(t: &str) -> Result<DateTime<chrono_tz::Tz>, chrono::ParseError> {
-        let t = DateTime::parse_from_rfc3339(t)?.timestamp();
-        Ok(New_York.timestamp(t, 0))
+        Ok(DateTime::parse_from_rfc3339(t)?.with_timezone(&New_York))
     }
 }
 
