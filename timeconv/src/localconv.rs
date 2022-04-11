@@ -9,8 +9,8 @@ where
     Tz: TimeZone,
     Tz::Offset: std::fmt::Display,
 {
-    // t.to_rfc3339()
-    t.format("%Y-%m-%dT%H:%M:%S%:z").to_string()
+    //t.format("%Y-%m-%dT%H:%M:%S%:z").to_string()
+    t.to_rfc3339()
 }
 
 pub fn unix2time(t: i64) -> DateTime<Local> {
