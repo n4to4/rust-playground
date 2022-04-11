@@ -117,7 +117,10 @@ mod tests {
                 .unwrap()
                 .timestamp()
         );
+    }
 
+    #[test]
+    fn test_newyork2_str2time() {
         assert_eq!(
             1648771200,
             newyork2::str2time("2022-03-31T20:00:00-04:00")
