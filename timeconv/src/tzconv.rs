@@ -128,4 +128,14 @@ mod tests {
                 .timestamp()
         );
     }
+
+    //
+    // fail to parse time string
+    //
+
+    #[test]
+    fn fail_local_str2time() {
+        let t = "2022-03-31T20:00:00"; // no timezone
+        assert!(local::str2time(t).is_err());
+    }
 }
