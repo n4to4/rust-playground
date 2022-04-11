@@ -13,6 +13,14 @@ where
     t.format("%Y-%m-%dT%H:%M:%S%:z").to_string()
 }
 
+pub fn unix2time(t: i64) -> DateTime<Local> {
+    Local.timestamp(t, 0)
+}
+
+pub fn unix2str(t: i64) -> String {
+    time2str(Local.timestamp(t, 0))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -27,5 +35,18 @@ mod tests {
     fn test_time2str() {
         let t = Local.ymd(2022, 4, 1).and_hms(9, 0, 0);
         assert_eq!("2022-04-01T09:00:00+09:00", &time2str(t));
+    }
+
+    #[test]
+    fn test_unix2time() {
+        let t = 1648771200;
+        let t = unix2time(t);
+        assert_eq!("2022-04-01T09:00:00+09:00", &time2str(t));
+    }
+
+    #[test]
+    fn test_unix2str() {
+        let t = 1648771200;
+        assert_eq!("2022-04-01T09:00:00+09:00", &unix2str(t));
     }
 }
