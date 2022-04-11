@@ -22,8 +22,7 @@ pub fn unix2str(t: i64) -> String {
 }
 
 pub fn str2time(t: &str) -> Result<DateTime<Local>, chrono::ParseError> {
-    let t = DateTime::parse_from_rfc3339(t)?.timestamp();
-    Ok(Local.timestamp(t, 0))
+    Ok(DateTime::parse_from_rfc3339(t)?.with_timezone(&Local))
 }
 
 pub fn str2unix(t: &str) -> Result<i64, chrono::ParseError> {
