@@ -1,20 +1,26 @@
 pub mod utc {
-    use chrono::format::ParseError;
     use chrono::prelude::*;
 
     pub fn unix2time(t: i64) -> DateTime<Utc> {
         Utc.timestamp(t, 0)
     }
 
-    pub fn str2time(t: &str) -> Result<DateTime<FixedOffset>, ParseError> {
-        DateTime::parse_from_rfc3339(t)
+    pub fn str2time(t: &str) -> Result<DateTime<Utc>, chrono::ParseError> {
+        let t = DateTime::parse_from_rfc3339(t)?.timestamp();
+        Ok(Utc.timestamp(t, 0))
     }
 }
 
 pub mod local {
     use chrono::prelude::*;
+
     pub fn unix2time(t: i64) -> DateTime<Local> {
         Local.timestamp(t, 0)
+    }
+
+    pub fn str2time(t: &str) -> Result<DateTime<Local>, chrono::ParseError> {
+        let t = DateTime::parse_from_rfc3339(t)?.timestamp();
+        Ok(Local.timestamp(t, 0))
     }
 }
 
@@ -27,6 +33,10 @@ pub mod newyork {
     pub fn unix2time(t: i64) -> DateTime<FixedOffset> {
         NEW_YORK.timestamp(t, 0)
     }
+
+    pub fn str2time(t: &str) -> Result<DateTime<FixedOffset>, chrono::ParseError> {
+        DateTime::parse_from_rfc3339(t)
+    }
 }
 
 pub mod newyork2 {
@@ -36,33 +46,83 @@ pub mod newyork2 {
     pub fn unix2time(t: i64) -> DateTime<chrono_tz::Tz> {
         New_York.timestamp(t, 0)
     }
+
+    pub fn str2time(t: &str) -> Result<DateTime<chrono_tz::Tz>, chrono::ParseError> {
+        let t = DateTime::parse_from_rfc3339(t)?.timestamp();
+        Ok(New_York.timestamp(t, 0))
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    //
+    // unix2time
+    //
+
     #[test]
-    fn test_utc() {
+    fn test_utc_unix2time() {
         let dt = utc::unix2time(1648771200);
         assert_eq!(&dt.to_rfc3339(), "2022-04-01T00:00:00+00:00");
     }
 
     #[test]
-    fn test_local() {
+    fn test_local_unix2time() {
         let dt = local::unix2time(1648771200);
         assert_eq!(&dt.to_rfc3339(), "2022-04-01T09:00:00+09:00");
     }
 
     #[test]
-    fn test_newyork() {
+    fn test_newyork_unix2time() {
         let dt = newyork::unix2time(1648771200);
         assert_eq!(&dt.to_rfc3339(), "2022-03-31T20:00:00-04:00");
     }
 
     #[test]
-    fn test_newyork2() {
+    fn test_newyork2_unix2time() {
         let dt = newyork2::unix2time(1648771200);
         assert_eq!(&dt.to_rfc3339(), "2022-03-31T20:00:00-04:00");
+    }
+
+    //
+    // str2time
+    //
+
+    #[test]
+    fn test_utc_str2time() {
+        assert_eq!(
+            1648771200,
+            utc::str2time("2022-03-31T20:00:00-04:00")
+                .unwrap()
+                .timestamp()
+        );
+    }
+
+    #[test]
+    fn test_local_str2time() {
+        assert_eq!(
+            1648771200,
+            local::str2time("2022-03-31T20:00:00-04:00")
+                .unwrap()
+                .timestamp()
+        );
+    }
+
+    #[test]
+    fn test_newyork_str2time() {
+        assert_eq!(
+            1648771200,
+            newyork::str2time("2022-03-31T20:00:00-04:00")
+                .unwrap()
+                .timestamp()
+        );
+
+        assert_eq!(
+            1648771200,
+            newyork2::str2time("2022-03-31T20:00:00-04:00")
+                .unwrap()
+                .timestamp()
+        );
     }
 }
