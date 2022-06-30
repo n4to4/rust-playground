@@ -1,12 +1,22 @@
 pub mod utc {
     use chrono::prelude::*;
 
+    /// ## UNIX時間から`DateTime<Utc>`型への変換
+    ///
+    /// Goのは`In`メソッドでタイムゾーンを後から指定するが
+    /// Rustのは`TimeZone`を実装した型(`Utc`)のメソッドを使う
     pub fn unix2time(t: i64) -> DateTime<Utc> {
         Utc.timestamp(t, 0)
 
         //Utc.from_utc_datetime(&NaiveDateTime::from_timestamp(t, 0))
     }
 
+    /// ## 文字列から`DateTime<Utc>`型への変換
+    ///
+    /// `parse_from_rfc3339`はタイムゾーン情報を解釈して`DateTime<FixedOffset>`を返す
+    /// それを`DateTime<Utc>`に変換するために`with_timezone`を使う
+    ///
+    /// 文字列にタイムゾーンがなかったりするとエラー
     pub fn str2time(t: &str) -> Result<DateTime<Utc>, chrono::ParseError> {
         Ok(DateTime::parse_from_rfc3339(t)?.with_timezone(&Utc))
     }
@@ -15,6 +25,7 @@ pub mod utc {
 pub mod local {
     use chrono::prelude::*;
 
+    /// `TimeZone` = `Local`の場合
     pub fn unix2time(t: i64) -> DateTime<Local> {
         Local.timestamp(t, 0)
     }
@@ -30,6 +41,10 @@ pub mod newyork {
 
     static NEW_YORK: Lazy<FixedOffset> = Lazy::new(|| FixedOffset::west(4 * 3600));
 
+    /// `TimeZone` = `NEW_YORK`の場合
+    ///
+    /// `FixedOffset`のメソッドから任意のタイムゾーンを作れる
+    /// `FixedOffset`は`TimeZone`を実装しているので`Utc`や`Local`のように使える
     pub fn unix2time(t: i64) -> DateTime<FixedOffset> {
         NEW_YORK.timestamp(t, 0)
     }
@@ -43,6 +58,9 @@ pub mod newyork2 {
     use chrono::prelude::*;
     use chrono_tz::America::New_York;
 
+    /// `TimeZone` = `NEW_YORK`の場合(2)
+    ///
+    /// `chrono_tz`には名前付きの`TimeZone`が定義されているのでこれを使っても良い
     pub fn unix2time(t: i64) -> DateTime<chrono_tz::Tz> {
         New_York.timestamp(t, 0)
     }

@@ -1,9 +1,28 @@
+//! ## 時刻を表すための方式
+//!
+//! `DateTime<Tz: TimeZone>`
+//!
+//! - `DateTime<Utc>`
+//! - `DateTime<Local>`
+//! - `DateTime<FixxedOffset>`
+//!
+//! とか色々あってややこしい
+//!
+//! `DateTIme<Tz>`を作るには`TimeZone`のメソッドから作る
+//!
+//! - `Utc::now()` -> `DateTime<Utc>` とか、
+//! - `Local.ymd(2022, 04, 01).and_hms(...)` -> `DateTime<Local>`
+
 use chrono::prelude::*;
 
+/// ## `DateTime<Tz>`型からの変換
+///
+/// `DateTime<Tz>` -> UNIX時間
 pub fn time2unix<Tz: TimeZone>(t: DateTime<Tz>) -> i64 {
     t.timestamp()
 }
 
+/// `DateTime<Tz>` -> 文字列
 pub fn time2str<Tz>(t: DateTime<Tz>) -> String
 where
     Tz: TimeZone,
@@ -13,18 +32,26 @@ where
     t.to_rfc3339()
 }
 
+/// ## UNIX時間からの変換
+///
+/// UNIX時間 -> `DateTime<Tz>`型
 pub fn unix2time(t: i64) -> DateTime<Local> {
     Local.timestamp(t, 0)
 }
 
+/// UNIX時間 -> 文字列
 pub fn unix2str(t: i64) -> String {
     time2str(Local.timestamp(t, 0))
 }
 
+/// ## 文字列からの変換
+///
+/// 文字列 -> `DateTime<Tz>`型
 pub fn str2time(t: &str) -> Result<DateTime<Local>, chrono::ParseError> {
     Ok(DateTime::parse_from_rfc3339(t)?.with_timezone(&Local))
 }
 
+/// 文字列 -> UNIX時間
 pub fn str2unix(t: &str) -> Result<i64, chrono::ParseError> {
     Ok(DateTime::parse_from_rfc3339(t)?.timestamp())
 }
